@@ -1,0 +1,53 @@
+<% layout('layouts/boilerplate') %>
+
+<!-- Cluster Map -->
+<div id="cluster-map"></div>
+
+<div class="container mt-3">
+    <h1>All Campgrounds</h1>
+
+    <% if (campgrounds.length === 0) { %>
+        <p>No campgrounds found.</p>
+    <% } else { %>
+        <% for (let campground of campgrounds) { %>
+            <div class="card mb-4 shadow-sm">
+                <div class="row no-gutters">
+                    <div class="col-md-5">
+                        <% if (campground.images && campground.images.length > 0) { %>
+                            <img 
+                                src="<%= campground.images[0].url %>" 
+                                alt="Campground Image" 
+                                class="img-fluid rounded-start"
+                                style="width:100%; max-height:300px; object-fit:cover;">
+                        <% } else { %>
+                            <img 
+                                src="https://via.placeholder.com/600x400?text=No+Image" 
+                                alt="No Image" 
+                                class="img-fluid rounded-start"
+                                style="width:100%; max-height:300px; object-fit:cover;">
+                        <% } %>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="card-body">
+                            <h4 class="card-title"><%= campground.title %></h4>
+                            <p class="card-text"><%= campground.description.substring(0, 100) %>...</p>
+                            <p class="card-text">
+                                <small class="text-muted"><%= campground.location %></small>
+                            </p>
+                            <a class="btn btn-primary" href="/campgrounds/<%= campground._id %>">
+                                View Campground
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+    <% } %>
+</div>
+
+<!-- Maptiler API key + campgrounds data -->
+<script>
+    const maptilerApiKey = '<%- process.env.MAPTILER_API_KEY %>';
+    const campgrounds = { features: <%- JSON.stringify(campgrounds) %> };
+</script>
+<script src="/javascripts/clusterMap.js"></script>
